@@ -4,74 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>JUANKALCULA PRO</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#00ffc3">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1 class="logo">JUANKALCULA</h1>
+            <nav class="menu">
+                <button class="menu-btn" onclick="setMode('Calculadora')">Calculadora</button>
+                <button class="menu-btn" onclick="setMode('Resistencia')">Resistencia</button>
+                <button class="menu-btn" onclick="setMode('Capacitor')">Capacitor</button>
+                <button class="menu-btn" onclick="setMode('Identificar')">Identificar</button>
+                <button class="menu-btn" onclick="setMode('E96')">E96</button>
+                <button class="menu-btn active" onclick="setMode('Datasheet')">Datasheet</button>
+            </nav>
+            <div class="sidebar-footer">
+                <p id="footer-text">DATASHEET</p>
+            </div>
+        </aside>
 
-<div class="app">
-    <div class="sidebar">
-        <h2>JUANKALCULA</h2>
-        <div class="nav-buttons">
-            <button onclick="setMode('calc')">Calculadora</button>
-            <button onclick="setMode('resistor')">Resistencia</button>
-            <button onclick="setMode('capacitor')">Capacitor</button>
-            <button onclick="setMode('identify')">Identificar</button>
-            <button onclick="setMode('e96')">E96</button>
-            <button onclick="setMode('semiconductor')">Datasheet</button>
-        </div>
-
-        <div id="componentViewer" class="component-viewer">
-            <img id="componentImg" src="images/calculadora.png" alt="Icono">
-            <div id="componentName" class="component-label">CALCULADORA</div>
-        </div>
-    </div>
-
-    <div class="main">
-        <div class="display">
-            <div id="modeIndicator">MODO: CALCULADORA</div>
-            <div id="operation">0</div>
-            <div id="result">0</div>
-        </div>
-
-        <div class="keys" id="keys">
+        <main class="main-content">
+            <div class="display-container">
+                <div class="mode-indicator" id="current-mode">MODO: DATASHEET</div>
+                <div class="result-screen" id="result">
+                    <p style="color: #666;">Ingresa un componente...</p>
+                </div>
             </div>
 
-        <button class="execute" onclick="run()">DECODIFICAR</button>
-
-        <div id="pdfPanel" class="pdf-panel hidden">
-            <div class="pdf-toolbar">
-                <span id="pdfTitle">Datasheet</span>
-                <a id="openPdfBtn" class="pdf-open-btn" href="#" target="_blank">Abrir aparte</a>
+            <div class="keyboard">
+                <div class="input-row">
+                    <input type="text" id="input-value" placeholder="Escribe aquí..." autocomplete="off">
+                </div>
+                <div class="keys-grid">
+                    </div>
+                <button class="decode-btn" id="btn-decode">DECODIFICAR</button>
             </div>
-            <div id="pdfOptions" class="pdf-options"></div>
-            <iframe id="pdfFrame" class="pdf-frame" src=""></iframe>
-        </div>
+        </main>
     </div>
-</div>
 
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('SW registrado'))
-                .catch(err => console.log('Error SW', err));
-        });
-    }
-</script>
-
-<script src="js/calculator.js"></script>
-<script src="js/main.js"></script>
-<script src="modules/resistorDecoder.js"></script>
-<script src="modules/capacitorDecoder.js"></script>
-<script src="modules/E96Decoder.js"></script>
-<script src="modules/smdIdentifier.js"></script>
-<script src="modules/semiconductorDatasheet.js"></script>
-
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>
