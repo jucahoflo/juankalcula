@@ -6,6 +6,7 @@
     <title>JUANKALCULA PRO</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
 </head>
 <body>
     <div class="container">
@@ -20,7 +21,7 @@
                 <button class="menu-btn active" onclick="setMode('Datasheet')">Datasheet</button>
             </nav>
             <div class="sidebar-footer">
-                <p id="footer-text">DATASHEET</p>
+                <p id="footer-text" style="color: #00ffc3; font-weight: bold;">DATASHEET</p>
             </div>
         </aside>
 
@@ -34,10 +35,25 @@
 
             <div class="keyboard">
                 <div class="input-row">
-                    <input type="text" id="input-value" placeholder="Escribe aquí..." autocomplete="off">
+                    <input type="text" id="input-value" placeholder="2N2222, TIP120..." autocomplete="off">
                 </div>
+                
                 <div class="keys-grid">
-                    </div>
+                    <button class="key-btn action">C</button>
+                    <button class="key-btn action">⌫</button>
+                    <button class="key-btn">7</button><button class="key-btn">8</button><button class="key-btn">9</button>
+                    <button class="key-btn">4</button><button class="key-btn">5</button><button class="key-btn">6</button>
+                    <button class="key-btn">1</button><button class="key-btn">2</button><button class="key-btn">3</button>
+                    <button class="key-btn">0</button><button class="key-btn">.</button>
+                    <button class="key-btn">A</button><button class="key-btn">B</button><button class="key-btn">C</button><button class="key-btn">D</button>
+                    <button class="key-btn">E</button><button class="key-btn">F</button><button class="key-btn">G</button><button class="key-btn">H</button>
+                    <button class="key-btn">I</button><button class="key-btn">J</button><button class="key-btn">K</button><button class="key-btn">L</button>
+                    <button class="key-btn">M</button><button class="key-btn">N</button><button class="key-btn">O</button><button class="key-btn">P</button>
+                    <button class="key-btn">Q</button><button class="key-btn">R</button><button class="key-btn">S</button><button class="key-btn">T</button>
+                    <button class="key-btn">U</button><button class="key-btn">V</button><button class="key-btn">W</button><button class="key-btn">X</button>
+                    <button class="key-btn">Y</button><button class="key-btn">Z</button>
+                </div>
+
                 <button class="decode-btn" id="btn-decode">DECODIFICAR</button>
             </div>
         </main>
