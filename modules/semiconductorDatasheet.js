@@ -1,104 +1,57 @@
-function showPdfInApp(url, part) {
-    const panel = document.getElementById("pdfPanel");
-    const frame = document.getElementById("pdfFrame");
-    const openBtn = document.getElementById("openPdfBtn");
-    const title = document.getElementById("pdfTitle");
+/**
+ * Lógica de conexión con el Servidor Cloud (Render)
+ */
+const API_URL = "https://juankalcula-api.onrender.com";
 
-    if (!panel || !frame || !openBtn || !title) return;
-
-    title.innerText = `Datasheet: ${part}`;
-    openBtn.href = url;
-    openBtn.style.display = "inline-block";
-    frame.src = url;
-    panel.classList.remove("hidden");
-}
-
-function renderPdfOptions(options, part) {
-    const container = document.getElementById("pdfOptions");
-    if (!container) return;
-
-    if (!options || options.length === 0) {
-        container.innerHTML = "";
-        return;
-    }
-
-    container.innerHTML = options.map((item, index) => `
-        <button class="pdf-option-btn ${index === 0 ? "active" : ""}" data-url="${item.url}">
-            ${item.label}
-        </button>
-    `).join("");
-
-    const buttons = container.querySelectorAll(".pdf-option-btn");
-
-    buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            buttons.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            showPdfInApp(btn.dataset.url, part);
-        });
-    });
-}
-
-function hidePdfInApp() {
-    const panel = document.getElementById("pdfPanel");
-    const frame = document.getElementById("pdfFrame");
-    const openBtn = document.getElementById("openPdfBtn");
-    const title = document.getElementById("pdfTitle");
-    const options = document.getElementById("pdfOptions");
-
-    if (panel) panel.classList.add("hidden");
-    if (frame) frame.src = "";
-    if (openBtn) {
-        openBtn.href = "#";
-        openBtn.style.display = "none";
-    }
-    if (title) title.innerText = "Datasheet";
-    if (options) options.innerHTML = "";
-}
-
-async function searchSemiconductor(code) {
-    if (!code || code === "0") {
-        hidePdfInApp();
-        return { ok: false, html: "Ingrese un componente" };
-    }
-
-    let part = code.toUpperCase().trim();
-
-    if (/^\d+$/.test(part)) {
-        part = "2N" + part;
-    }
+async function searchSemiconductor(partNumber) {
+    const query = partNumber.toUpperCase().trim();
+    const resultDiv = document.getElementById("result");
+    
+    // Mostramos un mensaje de carga mientras el servidor de Render "despierta"
+    resultDiv.innerHTML = `<div style="color: #00ffc3; font-style: italic;">Buscando en la nube...</div>`;
 
     try {
-        const res = await fetch(`http://localhost:3000/api/datasheet?part=${encodeURIComponent(part)}`);
-        const data = await res.json();
-
-        console.log("Respuesta datasheet:", data);
-
-        if (!data.ok || !data.pdfUrl) {
-            hidePdfInApp();
-            return { ok: false, html: "No se encontró datasheet" };
+        // Petición al servidor de Render
+        const response = await fetch(`${API_URL}/api/semiconductors/${query}`);
+        
+        if (!response.ok) {
+            throw new Error("No se encontró el componente");
         }
 
-        if (data.mode === "pdf") {
-            showPdfInApp(data.pdfUrl, data.part);
-            renderPdfOptions(data.options || [], data.part);
-
-            return {
-                ok: true,
-                html: `PDF cargado: ${data.part}`
-            };
-        }
-
-        hidePdfInApp();
-
+        const data = await response.json();
+        
+        // Construimos la respuesta visual profesional
         return {
-            ok: true,
-            html: `<a href="${data.pdfUrl}" target="_blank" class="pdf-link">Abrir búsqueda de datasheet: ${data.part}</a>`
+            success: true,
+            html: `
+                <div style="border: 1px solid #00ffc3; padding: 15px; border-radius: 8px; background: rgba(0,255,195,0.05); text-align: left;">
+                    <h3 style="color: #00ffc3; margin-top: 0;">${data.name}</h3>
+                    <p style="color: #ccc; font-size: 13px;">${data.description}</p>
+                    <hr style="border: 0; border-top: 1px solid #222; margin: 10px 0;">
+                    <a href="${API_URL}${data.pdfUrl}" target="_blank" 
+                       style="display: block; background: #00c853; color: white; text-align: center; 
+                              padding: 12px; border-radius: 5px; text-decoration: none; font-weight: bold;
+                              box-shadow: 0 4px 15px rgba(0,200,83,0.3);">
+                       📄 ABRIR DATASHEET PDF
+                    </a>
+                </div>
+            `
         };
 
-    } catch (err) {
-        console.error(err);
-        hidePdfInApp();
-        return { ok: false, html: "No se pudo conectar al servidor" };
+    } catch (error) {
+        console.error("Error API:", error);
+        return { 
+            success: false, 
+            html: `
+                <div style="color: #ff5252; padding: 10px; border: 1px solid #ff5252; border-radius: 5px;">
+                    ⚠️ ${query} no encontrado en la base de datos local.
+                    <br><br>
+                    <a href="https://www.alldatasheet.com/view.jsp?SearchTerm=${query}" target="_blank" 
+                       style="color: #00ffc3; text-decoration: underline;">
+                       Buscar en base de datos global
+                    </a>
+                </div>
+            `
+        };
     }
 }
