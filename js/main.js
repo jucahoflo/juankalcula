@@ -5,38 +5,39 @@ const inputValue = document.getElementById("input-value");
 const btnDecode = document.getElementById("btn-decode");
 const currentMode = document.getElementById("current-mode");
 
-// 1. Lógica del botón DECODIFICAR
-btnDecode.addEventListener("click", async () => {
-    const value = inputValue.value.toUpperCase().trim();
-    const mode = currentMode.innerText;
-
-    if (!value) {
-        resultDiv.innerHTML = "<p style='color: #ff5252;'>⚠️ Ingresa un valor</p>";
-        return;
-    }
-
-    if (mode === "MODO: DATASHEET") {
-        resultDiv.innerHTML = "<p style='color: #00ffc3;'>Consultando servidor Cloud...</p>";
-        const result = await searchSemiconductor(value);
-        resultDiv.innerHTML = result.html;
-    } 
-    else if (mode === "MODO: RESISTENCIA") {
-        // Tu lógica de resistencias aquí
-        resultDiv.innerHTML = `<p>Calculando Resistencia para: ${value}</p>`;
-    }
-    // Añade aquí los demás modos (Capacitor, E96, etc.)
-});
-
-// 2. Lógica para cambiar de modo en el menú
-document.querySelectorAll(".menu-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        // Quitar clase active de todos y poner al actual
-        document.querySelectorAll(".menu-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        
-        const modeName = btn.getAttribute("data-mode").toUpperCase();
-        currentMode.innerText = `MODO: ${modeName}`;
-        resultDiv.innerHTML = `<p style="color: #666;">Listo para ${modeName}</p>`;
-        inputValue.value = "";
+// Lógica para que los botones del teclado escriban en el input
+document.querySelectorAll('.key-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const char = btn.innerText;
+        if (char === 'C') inputValue.value = '';
+        else if (char === '⌫') inputValue.value = inputValue.value.slice(0, -1);
+        else inputValue.value += char;
     });
 });
+
+// Lógica del botón DECODIFICAR
+btnDecode.addEventListener("click", async () => {
+    const val = inputValue.value.toUpperCase().trim();
+    const mode = currentMode.innerText;
+
+    if (!val) return;
+
+    if (mode.includes("DATASHEET")) {
+        resultDiv.innerHTML = "<p style='color: #00ffc3;'>Buscando en la nube...</p>";
+        const result = await searchSemiconductor(val);
+        resultDiv.innerHTML = result.html;
+    } else {
+        // AQUÍ mantén tu código de resistencias/capacitores
+        resultDiv.innerHTML = `<p>Decodificando ${mode}: ${val}</p>`;
+    }
+});
+
+// Función para cambiar modos (global para los botones onclick del HTML)
+window.setMode = (mode) => {
+    currentMode.innerText = `MODO: ${mode.toUpperCase()}`;
+    resultDiv.innerHTML = "Listo para decodificar";
+    inputValue.value = "";
+    // Actualizar botones activos
+    document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+};
