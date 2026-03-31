@@ -5,35 +5,53 @@ const fullKeys = [
     { label: "⌫", action: "del()" },
     { label: "%", action: "percent()" },
     { label: "√", action: "sqrt()" },
+
     { label: "7", action: "add('7')" },
     { label: "8", action: "add('8')" },
     { label: "9", action: "add('9')" },
     { label: "÷", action: "add('/')" },
+
     { label: "4", action: "add('4')" },
     { label: "5", action: "add('5')" },
     { label: "6", action: "add('6')" },
     { label: "×", action: "add('*')" },
+
     { label: "1", action: "add('1')" },
     { label: "2", action: "add('2')" },
     { label: "3", action: "add('3')" },
     { label: "−", action: "add('-')" },
+
     { label: "0", action: "add('0')" },
     { label: ".", action: "add('.')" },
     { label: "=", action: "calculate()" },
     { label: "+", action: "add('+')" },
-    { label: "A", action: "add('A')" }, { label: "B", action: "add('B')" },
-    { label: "C", action: "add('C')" }, { label: "D", action: "add('D')" },
-    { label: "E", action: "add('E')" }, { label: "F", action: "add('F')" },
-    { label: "G", action: "add('G')" }, { label: "H", action: "add('H')" },
-    { label: "I", action: "add('I')" }, { label: "J", action: "add('J')" },
-    { label: "K", action: "add('K')" }, { label: "L", action: "add('L')" },
-    { label: "M", action: "add('M')" }, { label: "N", action: "add('N')" },
-    { label: "O", action: "add('O')" }, { label: "P", action: "add('P')" },
-    { label: "Q", action: "add('Q')" }, { label: "R", action: "add('R')" },
-    { label: "S", action: "add('S')" }, { label: "T", action: "add('T')" },
-    { label: "U", action: "add('U')" }, { label: "V", action: "add('V')" },
-    { label: "W", action: "add('W')" }, { label: "X", action: "add('X')" },
-    { label: "Y", action: "add('Y')" }, { label: "Z", action: "add('Z')" }
+
+    { label: "A", action: "add('A')" },
+    { label: "B", action: "add('B')" },
+    { label: "C", action: "add('C')" },
+    { label: "D", action: "add('D')" },
+    { label: "E", action: "add('E')" },
+    { label: "F", action: "add('F')" },
+    { label: "G", action: "add('G')" },
+    { label: "H", action: "add('H')" },
+    { label: "I", action: "add('I')" },
+    { label: "J", action: "add('J')" },
+    { label: "K", action: "add('K')" },
+    { label: "L", action: "add('L')" },
+    { label: "M", action: "add('M')" },
+    { label: "N", action: "add('N')" },
+    { label: "O", action: "add('O')" },
+    { label: "P", action: "add('P')" },
+    { label: "Q", action: "add('Q')" },
+    { label: "R", action: "add('R')" },
+    { label: "S", action: "add('S')" },
+    { label: "T", action: "add('T')" },
+    { label: "U", action: "add('U')" },
+    { label: "V", action: "add('V')" },
+    { label: "W", action: "add('W')" },
+    { label: "X", action: "add('X')" },
+    { label: "Y", action: "add('Y')" },
+    { label: "Z", action: "add('Z')" }
 ];
 
 function renderKeys() {
@@ -73,6 +91,23 @@ function showPdfPanel(pdfUrl, partNumber) {
     if (panel) panel.classList.remove("hidden");
 }
 
+function updateActionButton() {
+    const executeBtn = document.querySelector(".execute");
+    if (!executeBtn) return;
+
+    if (mode === "calc") {
+        executeBtn.innerText = "CALCULAR";
+        return;
+    }
+
+    if (mode === "semiconductor") {
+        executeBtn.innerText = "CONSULTAR DATASHEET";
+        return;
+    }
+
+    executeBtn.innerText = "CONVERTIR";
+}
+
 function setMode(m) {
     mode = m;
 
@@ -107,6 +142,7 @@ function setMode(m) {
 
     hidePdfPanel();
     renderKeys();
+    updateActionButton();
 }
 
 async function run() {
@@ -120,16 +156,32 @@ async function run() {
         if (mode === "resistor") {
             hidePdfPanel();
             out = decodeResistor(value);
-        } else if (mode === "capacitor") {
+            document.getElementById("result").innerText = out;
+            return;
+        }
+
+        if (mode === "capacitor") {
             hidePdfPanel();
             out = decodeCapacitor(value);
-        } else if (mode === "e96") {
+            document.getElementById("result").innerText = out;
+            return;
+        }
+
+        if (mode === "e96") {
             hidePdfPanel();
             out = decodeE96(value);
-        } else if (mode === "identify") {
+            document.getElementById("result").innerText = out;
+            return;
+        }
+
+        if (mode === "identify") {
             hidePdfPanel();
             out = identify(value);
-        } else if (mode === "semiconductor") {
+            document.getElementById("result").innerText = out;
+            return;
+        }
+
+        if (mode === "semiconductor") {
             hidePdfPanel();
             document.getElementById("result").innerHTML = "🔎 Buscando...";
 
@@ -137,20 +189,21 @@ async function run() {
 
             document.getElementById("result").innerHTML = res.html;
 
-            if (res.success && res.pdfUrl) {
+            if (res.useViewer && res.pdfUrl) {
                 showPdfPanel(res.pdfUrl, value);
             } else {
                 hidePdfPanel();
             }
 
             return;
-        } else if (mode === "calc") {
+        }
+
+        if (mode === "calc") {
             hidePdfPanel();
             calculate();
             return;
         }
 
-        document.getElementById("result").innerText = out;
     } catch (e) {
         hidePdfPanel();
         document.getElementById("result").innerText = "Error: " + e.message;
@@ -160,4 +213,5 @@ async function run() {
 document.addEventListener("DOMContentLoaded", () => {
     renderKeys();
     hidePdfPanel();
+    updateActionButton();
 });
