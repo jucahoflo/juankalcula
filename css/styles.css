@@ -268,12 +268,19 @@ body {
 /* ============================= */
 
 @media (max-width: 768px) {
+    body {
+        padding: 0;
+        align-items: stretch;
+    }
 
     .app {
         flex-direction: column;
         width: 100%;
         max-width: 100%;
+        min-height: 100vh;
         border-radius: 0;
+        box-shadow: none;
+        overflow: visible;
     }
 
     .sidebar {
@@ -287,6 +294,7 @@ body {
         border-right: none;
         border-bottom: 1px solid #222;
         background: #0f0f0f;
+        box-sizing: border-box;
         scrollbar-width: none;
     }
 
@@ -301,7 +309,7 @@ body {
     .sidebar button {
         flex: 0 0 auto;
         width: auto;
-        min-width: 140px;
+        min-width: 145px;
         margin: 0;
         padding: 10px 12px;
         text-align: center;
@@ -315,28 +323,21 @@ body {
         transform: none;
     }
 
+    /* En móvil no aporta valor y quita espacio */
     #componentViewer {
-        width: 100%;
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px solid #222;
-    }
-
-    #componentImg {
-        width: 55px;
-    }
-
-    #componentName {
-        font-size: 9px;
+        display: none;
     }
 
     .main {
-        padding: 12px;
+        flex: 1;
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
     }
 
     .display {
         padding: 10px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
     }
 
     #modeIndicator {
@@ -344,36 +345,39 @@ body {
     }
 
     #operation {
-        font-size: 14px;
+        font-size: 15px;
         min-height: 18px;
     }
 
     #result {
-        font-size: 18px;
+        font-size: 20px;
         min-height: 24px;
     }
 
     .keys {
-        grid-template-columns: repeat(4, 1fr);
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 6px;
         padding: 8px;
         max-height: none;
+        overflow: visible;
     }
 
     .keys button {
-        padding: 12px 6px;
-        font-size: 13px;
+        padding: 12px 4px;
+        font-size: 14px;
     }
 
     .execute {
-        margin-top: 12px;
-        padding: 13px;
+        margin-top: 10px;
+        width: 100%;
+        padding: 14px;
         font-size: 14px;
         border-radius: 8px;
     }
 
     .pdf-panel {
-        margin-top: 15px;
+        margin-top: 12px;
         padding: 8px;
     }
 
@@ -390,6 +394,7 @@ body {
     }
 
     .pdf-frame {
-        height: 360px;
+        height: 65vh;
+        min-height: 320px;
     }
 }
