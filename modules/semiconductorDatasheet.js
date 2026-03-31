@@ -22,7 +22,6 @@ export async function searchSemiconductor(partNumber) {
         }
         throw new Error();
     } catch (error) {
-        // Si no está en local, ofrece buscar en AllDataSheet
         return {
             success: true,
             html: `
