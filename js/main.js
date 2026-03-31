@@ -1,3 +1,6 @@
+// 1. Conexión con el buscador de Datasheets
+import { searchSemiconductor } from '../modules/semiconductorDatasheet.js';
+
 let mode = "calc";
 
 const fullKeys = [
@@ -57,9 +60,9 @@ function setMode(m) {
         e96: "e96.png", semiconductor: "transistor.png"
     };
 
-    document.getElementById("modeIndicator").innerText = "MODO: " + titles[m];
+    const modeInd = document.getElementById("modeIndicator");
+    if(modeInd) modeInd.innerText = "MODO: " + titles[m];
     
-    // Actualizar imagen lateral
     const img = document.getElementById("componentImg");
     const label = document.getElementById("componentName");
     if(img) img.src = `images/${images[m]}`;
@@ -81,6 +84,8 @@ async function run() {
         else if (mode === "e96") out = decodeE96(value);
         else if (mode === "identify") out = identify(value);
         else if (mode === "semiconductor") {
+            // Actualización para mostrar el visor HTML
+            document.getElementById("result").innerHTML = "<p style='color: #00ffc3;'>Consultando servidor...</p>";
             const res = await searchSemiconductor(value);
             document.getElementById("result").innerHTML = res.html;
             return;
@@ -92,5 +97,10 @@ async function run() {
         document.getElementById("result").innerText = "Error: " + e.message;
     }
 }
+
+// Hacer las funciones accesibles para los botones onclick del HTML
+window.setMode = setMode;
+window.run = run;
+window.renderKeys = renderKeys;
 
 document.addEventListener("DOMContentLoaded", renderKeys);
