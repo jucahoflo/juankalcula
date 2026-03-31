@@ -39,58 +39,125 @@ const fullKeys = [
 function renderKeys() {
     const container = document.getElementById("keys");
     if (!container) return;
+
     container.innerHTML = fullKeys
         .map(k => `<button onclick="${k.action}">${k.label}</button>`)
         .join("");
 }
 
+function hidePdfPanel() {
+    const panel = document.getElementById("pdfPanel");
+    const frame = document.getElementById("pdfFrame");
+    const title = document.getElementById("pdfTitle");
+    const openBtn = document.getElementById("openPdfBtn");
+    const options = document.getElementById("pdfOptions");
+
+    if (panel) panel.classList.add("hidden");
+    if (frame) frame.src = "";
+    if (title) title.innerText = "Datasheet";
+    if (openBtn) openBtn.href = "#";
+    if (options) options.innerHTML = "";
+}
+
+function showPdfPanel(pdfUrl, partNumber) {
+    const panel = document.getElementById("pdfPanel");
+    const frame = document.getElementById("pdfFrame");
+    const title = document.getElementById("pdfTitle");
+    const openBtn = document.getElementById("openPdfBtn");
+    const options = document.getElementById("pdfOptions");
+
+    if (title) title.innerText = `Datasheet: ${partNumber}`;
+    if (frame) frame.src = pdfUrl;
+    if (openBtn) openBtn.href = pdfUrl;
+    if (options) options.innerHTML = "";
+    if (panel) panel.classList.remove("hidden");
+}
+
 function setMode(m) {
     mode = m;
+
     const titles = {
-        calc: "CALCULADORA", resistor: "RESISTENCIA",
-        capacitor: "CAPACITOR", identify: "IDENTIFICAR",
-        e96: "E96", semiconductor: "DATASHEET"
+        calc: "CALCULADORA",
+        resistor: "RESISTENCIA",
+        capacitor: "CAPACITOR",
+        identify: "IDENTIFICAR",
+        e96: "E96",
+        semiconductor: "DATASHEET"
     };
+
     const images = {
-        calc: "calculadora.png", resistor: "resistencia.png",
-        capacitor: "capacitor.png", identify: "smd.png",
-        e96: "e96.png", semiconductor: "transistor.png"
+        calc: "calculadora.png",
+        resistor: "resistencia.png",
+        capacitor: "capacitor.png",
+        identify: "smd.png",
+        e96: "e96.png",
+        semiconductor: "transistor.png"
     };
 
     document.getElementById("modeIndicator").innerText = "MODO: " + titles[m];
-    
-    // Actualizar imagen lateral
+
     const img = document.getElementById("componentImg");
     const label = document.getElementById("componentName");
-    if(img) img.src = `images/${images[m]}`;
-    if(label) label.innerText = titles[m];
+
+    if (img) img.src = `images/${images[m]}`;
+    if (label) label.innerText = titles[m];
 
     document.getElementById("operation").innerText = "0";
     document.getElementById("result").innerText = "0";
+
+    hidePdfPanel();
     renderKeys();
 }
 
 async function run() {
-    let value = document.getElementById("operation").innerText.trim();
+    const value = document.getElementById("operation").innerText.trim();
+
     if (value === "0" && mode !== "calc") return;
 
     try {
         let out = "";
-        if (mode === "resistor") out = decodeResistor(value);
-        else if (mode === "capacitor") out = decodeCapacitor(value);
-        else if (mode === "e96") out = decodeE96(value);
-        else if (mode === "identify") out = identify(value);
-        else if (mode === "semiconductor") {
+
+        if (mode === "resistor") {
+            hidePdfPanel();
+            out = decodeResistor(value);
+        } else if (mode === "capacitor") {
+            hidePdfPanel();
+            out = decodeCapacitor(value);
+        } else if (mode === "e96") {
+            hidePdfPanel();
+            out = decodeE96(value);
+        } else if (mode === "identify") {
+            hidePdfPanel();
+            out = identify(value);
+        } else if (mode === "semiconductor") {
+            hidePdfPanel();
+            document.getElementById("result").innerHTML = "🔎 Buscando...";
+
             const res = await searchSemiconductor(value);
+
             document.getElementById("result").innerHTML = res.html;
+
+            if (res.success && res.pdfUrl) {
+                showPdfPanel(res.pdfUrl, value);
+            } else {
+                hidePdfPanel();
+            }
+
             return;
-        } 
-        else if (mode === "calc") { calculate(); return; }
+        } else if (mode === "calc") {
+            hidePdfPanel();
+            calculate();
+            return;
+        }
 
         document.getElementById("result").innerText = out;
     } catch (e) {
+        hidePdfPanel();
         document.getElementById("result").innerText = "Error: " + e.message;
     }
 }
 
-document.addEventListener("DOMContentLoaded", renderKeys);
+document.addEventListener("DOMContentLoaded", () => {
+    renderKeys();
+    hidePdfPanel();
+});

@@ -61,7 +61,7 @@ body {
 
 /* --- VISOR DE IMAGEN (SIDEBAR) --- */
 .component-viewer {
-    margin-top: auto; /* Lo empuja al final */
+    margin-top: auto;
     padding: 20px 0;
     text-align: center;
     border-top: 1px solid #222;
@@ -79,6 +79,28 @@ body {
     font-size: 10px;
     font-weight: bold;
     letter-spacing: 2px;
+}
+
+/* Compatibilidad con tu HTML actual */
+#componentViewer {
+    margin-top: 30px;
+    text-align: center;
+    border-top: 1px solid #333;
+    padding-top: 15px;
+}
+
+#componentImg {
+    width: 80px;
+    height: auto;
+    filter: drop-shadow(0 0 5px #00ffc3);
+}
+
+#componentName {
+    color: #00ffc3;
+    font-size: 10px;
+    margin-top: 5px;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 /* --- ÁREA PRINCIPAL --- */
@@ -121,6 +143,7 @@ body {
     font-weight: bold;
     margin-top: 5px;
     min-height: 28px;
+    word-break: break-word;
 }
 
 /* --- TECLADO (GRID DE 4 COLUMNAS) --- */
@@ -132,7 +155,7 @@ body {
     padding: 10px;
     border-radius: 8px;
     max-height: 500px;
-    overflow-y: auto; /* Por si el teclado crece mucho */
+    overflow-y: auto;
 }
 
 .keys button {
@@ -151,9 +174,9 @@ body {
     border-color: #00ffc3;
 }
 
-/* Estilo para las teclas de letras (Opcional: para distinguirlas) */
+/* Estilo para las teclas de letras */
 .keys button:nth-child(n+21) {
-    color: #00ffc3; /* Letras en color neón */
+    color: #00ffc3;
     font-weight: bold;
     background: #252525;
 }
@@ -217,18 +240,24 @@ body {
     border: 1px solid #00ffc3;
 }
 
+.pdf-options {
+    margin-bottom: 10px;
+}
+
 .pdf-frame {
     width: 100%;
     height: 600px;
     border: none;
     border-radius: 5px;
     background: white;
+    display: block;
 }
 
 /* Estilo para el scrollbar del teclado */
 .keys::-webkit-scrollbar {
     width: 6px;
 }
+
 .keys::-webkit-scrollbar-thumb {
     background: #333;
     border-radius: 10px;
