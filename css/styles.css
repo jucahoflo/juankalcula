@@ -1,4 +1,4 @@
-/* --- BASE --- */
+/* --- CONFIGURACIÓN GENERAL --- */
 body {
     margin: 0;
     background: #404054;
@@ -14,15 +14,15 @@ body {
     display: flex;
     background: #111;
     border-radius: 10px;
-    width: 900px;
-    max-width: 95%;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    width: 950px; /* Un poco más ancho para el teclado completo */
+    max-width: 98%;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
     overflow: hidden;
 }
 
-/* --- SIDEBAR --- */
+/* --- BARRA LATERAL (SIDEBAR) --- */
 .sidebar {
-    width: 180px;
+    width: 200px;
     padding: 15px;
     background: #0f0f0f;
     border-right: 1px solid #222;
@@ -35,121 +35,201 @@ body {
     font-size: 18px;
     margin-top: 0;
     text-align: center;
-}
-
-.nav-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    letter-spacing: 1px;
 }
 
 .sidebar button {
     width: 100%;
     padding: 10px;
-    background: #333;
-    border: 1px solid transparent;
-    color: white;
+    margin: 5px 0;
+    background: #222;
+    border: 1px solid #333;
+    color: #bbb;
     cursor: pointer;
     border-radius: 5px;
-    transition: 0.3s;
-    font-size: 12px;
+    transition: all 0.3s ease;
+    font-size: 13px;
+    text-align: left;
 }
 
 .sidebar button:hover {
+    background: #333;
+    color: #00ffc3;
     border-color: #00ffc3;
-    background: #444;
+    transform: translateX(5px);
 }
 
-/* --- VISOR DE IMAGEN --- */
+/* --- VISOR DE IMAGEN (SIDEBAR) --- */
 .component-viewer {
-    margin-top: auto;
+    margin-top: auto; /* Lo empuja al final */
     padding: 20px 0;
     text-align: center;
     border-top: 1px solid #222;
 }
 
 .component-viewer img {
-    width: 80px;
+    width: 90px;
     height: auto;
-    filter: drop-shadow(0 0 8px #00ffc3);
+    filter: drop-shadow(0 0 8px rgba(0, 255, 195, 0.5));
+    margin-bottom: 10px;
 }
 
 .component-label {
     color: #00ffc3;
     font-size: 10px;
     font-weight: bold;
-    margin-top: 5px;
+    letter-spacing: 2px;
 }
 
-/* --- MAIN PANEL --- */
+/* --- ÁREA PRINCIPAL --- */
 .main {
     flex: 1;
-    padding: 15px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
 }
 
+/* --- PANTALLA (DISPLAY) --- */
 .display {
     background: black;
     border: 2px solid #00ffc3;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: inset 0 0 15px rgba(0, 255, 195, 0.1);
 }
 
-#modeIndicator { color: #00ffc3; font-size: 11px; font-weight: bold; }
-#operation { color: #ccc; font-size: 16px; text-align: right; min-height: 20px; word-break: break-all; }
-#result { color: #00ffc3; font-size: 20px; text-align: right; font-weight: bold; }
+#modeIndicator {
+    color: #00ffc3;
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
 
-/* --- TECLADO COMPLETO --- */
+#operation {
+    color: #888;
+    font-size: 16px;
+    text-align: right;
+    min-height: 20px;
+    word-break: break-all;
+}
+
+#result {
+    color: #00ffc3;
+    font-size: 22px;
+    text-align: right;
+    font-weight: bold;
+    margin-top: 5px;
+    min-height: 28px;
+}
+
+/* --- TECLADO (GRID DE 4 COLUMNAS) --- */
 .keys {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
+    gap: 8px;
     background: #181818;
-    padding: 8px;
-    border-radius: 6px;
+    padding: 10px;
+    border-radius: 8px;
+    max-height: 500px;
+    overflow-y: auto; /* Por si el teclado crece mucho */
 }
 
 .keys button {
-    padding: 12px 5px;
-    font-size: 14px;
+    padding: 12px;
+    font-size: 15px;
     background: #2d2d2d;
     color: white;
-    border: none;
-    border-radius: 4px;
+    border: 1px solid #3d3d3d;
+    border-radius: 5px;
     cursor: pointer;
+    transition: 0.2s;
 }
 
-.keys button:hover { background: #444; }
+.keys button:hover {
+    background: #444;
+    border-color: #00ffc3;
+}
 
+/* Estilo para las teclas de letras (Opcional: para distinguirlas) */
+.keys button:nth-child(n+21) {
+    color: #00ffc3; /* Letras en color neón */
+    font-weight: bold;
+    background: #252525;
+}
+
+/* --- BOTÓN DE ACCIÓN --- */
 .execute {
-    margin-top: 10px;
+    margin-top: 15px;
     width: 100%;
-    padding: 12px;
+    padding: 15px;
     background: #00c853;
+    border: none;
     color: white;
     font-weight: bold;
-    border: none;
-    border-radius: 4px;
+    font-size: 16px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.3s;
 }
 
-/* --- RESPONSIVE (MÓVIL) --- */
-@media (max-width: 768px) {
-    body { padding: 0; }
-    .app { flex-direction: column; width: 100vw; height: 100vh; border-radius: 0; }
-    .sidebar { width: 100%; padding: 5px; border-right: none; border-bottom: 1px solid #222; }
-    .nav-buttons { flex-direction: row; overflow-x: auto; padding: 5px; }
-    .sidebar button { width: auto; white-space: nowrap; padding: 8px 15px; }
-    .sidebar h2, .component-viewer { display: none; }
-    .display { padding: 15px; }
-    .keys { gap: 4px; flex: 1; overflow-y: auto; }
-    .keys button { padding: 18px 5px; font-size: 16px; }
+.execute:hover {
+    background: #00e676;
+    box-shadow: 0 0 15px rgba(0, 200, 83, 0.4);
 }
 
-/* --- PDF PANEL --- */
-.pdf-panel { margin-top: 10px; background: #0b0b0b; border: 1px solid #00ffc3; padding: 8px; border-radius: 8px; }
-.hidden { display: none; }
-.pdf-frame { width: 100%; height: 500px; border: none; background: white; }
+/* --- PANEL DE PDF / DATASHEET --- */
+.pdf-panel {
+    margin-top: 20px;
+    background: #0b0b0b;
+    border: 1px solid #00ffc3;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.pdf-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+#pdfTitle {
+    color: #00ffc3;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.pdf-open-btn {
+    color: #00ffc3;
+    text-decoration: none;
+    background: #222;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    border: 1px solid #00ffc3;
+}
+
+.pdf-frame {
+    width: 100%;
+    height: 600px;
+    border: none;
+    border-radius: 5px;
+    background: white;
+}
+
+/* Estilo para el scrollbar del teclado */
+.keys::-webkit-scrollbar {
+    width: 6px;
+}
+.keys::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 10px;
+}
