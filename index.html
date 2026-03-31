@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JUANKALCULA PRO</title>
+    <meta name="theme-color" content="#00ffc3">
+    <link rel="manifest" href="./manifest.json">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -53,5 +55,12 @@
 <script src="modules/smdIdentifier.js"></script>
 <script src="modules/semiconductorDatasheet.js"></script>
 <script src="js/main.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js")
+    .then(() => console.log("PWA lista"))
+    .catch(err => console.log("SW error", err));
+}
+</script>
 </body>
 </html>

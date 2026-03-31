@@ -1,7 +1,7 @@
 {
-  "name": "JUANKALCULA PRO",
+  "name": "Juankalcula Pro",
   "short_name": "Juankalcula",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#111111",
   "theme_color": "#00ffc3",
